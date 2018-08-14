@@ -1,0 +1,30 @@
+Description: Static website stack hosting
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Bucket Name
+  IndexDocument:
+    Type: String
+    Description: Index Document
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+         IndexDocument: !Ref IndexDocument
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Sid: PublicReadGetObject
+          Action:
+          - s3:GetObject
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref S3Bucket, /*]]
+          Principal: '*'

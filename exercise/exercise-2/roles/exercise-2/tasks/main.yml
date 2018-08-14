@@ -1,0 +1,12 @@
+---
+  - name: Static-website-hosting
+    cloudformation:
+      stack_name: "Static-website-hosting-stack-{{user_name}}"
+      state: present
+      region: "ap-northeast-1"
+      disable_rollback: true
+      template: "cloudformation/exercise-static-website-hosting.yml"
+      stack_policy: "policies/stack-policy.json"
+      template_parameters:
+        BucketName: "{{bucket_name}}"
+        IndexDocument: "{{index_document}}"
