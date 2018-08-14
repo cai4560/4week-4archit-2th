@@ -1,7 +1,0 @@
-[exercise-2]
-localhost
-
-[exercise-2:vars]
-user_name=luo-trainee
-bucket_name=luo-trainee.cloudpatterns.info
-index_document=index.html

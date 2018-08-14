@@ -1,0 +1,50 @@
+Description: Static website stack hosting
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Bucket Name
+  IndexDocument:
+    Type: String
+    Description: Index Document
+  HostedZoneName:
+    Type: String
+    Description: Hosted Zone Name
+  HostedZoneId:
+    Type: String
+    Description: Hosted Zone Id
+  DNSName:
+    Type: String
+    Description: DNS Name
+
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+         IndexDocument: !Ref IndexDocument
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Sid: PublicReadGetObject
+          Action:
+          - s3:GetObject
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref S3Bucket, /*]]
+          Principal: '*'
+
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Ref BucketName
+      Type: A
+      HostedZoneName: !Ref HostedZoneName
+      AliasTarget:
+        DNSName: !Ref DNSName
+        HostedZoneId: !Ref HostedZoneId
